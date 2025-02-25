@@ -55,8 +55,6 @@ class UserListGL():
                 self.bookmarks()
             elif text == 'change history':
                 self.change_history()
-            elif text == 'comments':
-                self.comments()
             elif text == 'change history modified':
                 self.change_history('mode_modified')
             elif text == 'change history reverted to modified':
