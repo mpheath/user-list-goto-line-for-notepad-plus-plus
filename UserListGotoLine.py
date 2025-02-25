@@ -588,8 +588,8 @@ class UserListGL():
             style = [3]
         elif lang_type == LANGTYPE.USER:
             if 'dBASEPlus' in lang_name:
-                pattern = r'^\h*\K(?:(?:function|procedure)\b|\bclass\b)(?!\h*=)'
-                style = [14, 4]
+                pattern = r'(?:^\h*\K(?:function|procedure)\b|\bclass\b)(?!\h*=)'
+                style = [4, 14]
             elif 'NppExec' in lang_name:
                 pattern = r'^\h*:{1,2}'
                 style = [6, 7]
