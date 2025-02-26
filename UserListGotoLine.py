@@ -43,6 +43,7 @@ class UserListGL():
 
             line = m.group()
             line = int(line)
+            editor.ensureVisible(line - 1)
             editor.setFirstVisibleLine(line - 1)
             editor.gotoLine(line - 1)
 
