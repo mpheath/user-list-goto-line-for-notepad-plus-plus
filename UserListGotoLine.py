@@ -317,7 +317,7 @@ class UserListGL():
         for line in range(editor.getLineCount()):
             if editor.markerGet(line) & mask != 0:
                 text = editor.getLine(line).rstrip()
-                text = text.replace(r'\t', ' ' * tab_size)
+                text = text.replace('\t', ' ' * tab_size)
 
                 item = '{:<4}  {}'.format(line + 1, text[:self.max_length])
                 items.append(item)
@@ -352,7 +352,7 @@ class UserListGL():
         for line in range(editor.getLineCount()):
             if editor.markerGet(line) & mask != 0:
                 text = editor.getLine(line).rstrip()
-                text = text.replace(r'\t', ' ' * tab_size)
+                text = text.replace('\t', ' ' * tab_size)
 
                 item = '{:<4}  {}'.format(line + 1, text[:self.max_length])
                 items.append(item)
@@ -908,7 +908,7 @@ class UserListGL():
 
             if level > prev_level:
                 text = editor.getLine(line - 1).rstrip()
-                text = text.replace(r'\t', ' ' * tab_size)
+                text = text.replace('\t', ' ' * tab_size)
 
                 item = '{:<4}  {}'.format(line, text[:self.max_length])
                 items.append(item)
@@ -1047,7 +1047,7 @@ class UserListGL():
 
                 if prev_line != line:
                     text = editor.getLine(line).rstrip()
-                    text = text.replace(r'\t', ' ' * tab_size)
+                    text = text.replace('\t', ' ' * tab_size)
 
                     item = '{:<4}  {}'.format(line + 1, text[:self.max_length])
                     items.append(item)
