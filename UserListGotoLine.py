@@ -23,6 +23,9 @@ class UserListGL():
             if list_id not in self.list_id:
                 self.list_id.append(list_id)
 
+        # Set list format pattern used for line number and line text.
+        self.list_pattern = '{:<4}  {}'
+
         # Set text maximum length for user list.
         self.max_length = max_length
 
@@ -319,7 +322,7 @@ class UserListGL():
                 text = editor.getLine(line).rstrip()
                 text = text.replace('\t', ' ' * tab_size)
 
-                item = '{:<4}  {}'.format(line + 1, text[:self.max_length])
+                item = self.list_pattern.format(line + 1, text[:self.max_length])
                 items.append(item)
 
         self.user_list_show(self.list_id[0], items)
@@ -354,7 +357,7 @@ class UserListGL():
                 text = editor.getLine(line).rstrip()
                 text = text.replace('\t', ' ' * tab_size)
 
-                item = '{:<4}  {}'.format(line + 1, text[:self.max_length])
+                item = self.list_pattern.format(line + 1, text[:self.max_length])
                 items.append(item)
 
         self.user_list_show(self.list_id[0], items)
@@ -910,7 +913,7 @@ class UserListGL():
                 text = editor.getLine(line - 1).rstrip()
                 text = text.replace('\t', ' ' * tab_size)
 
-                item = '{:<4}  {}'.format(line, text[:self.max_length])
+                item = self.list_pattern.format(line, text[:self.max_length])
                 items.append(item)
 
             prev_level = level
@@ -1049,7 +1052,7 @@ class UserListGL():
                     text = editor.getLine(line).rstrip()
                     text = text.replace('\t', ' ' * tab_size)
 
-                    item = '{:<4}  {}'.format(line + 1, text[:self.max_length])
+                    item = self.list_pattern.format(line + 1, text[:self.max_length])
                     items.append(item)
 
                 prev_line = line
