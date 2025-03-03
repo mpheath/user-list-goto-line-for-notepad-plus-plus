@@ -16,7 +16,8 @@ class UserListGL():
 
         # Create user list ids.
         self.list_type = {'list_type_main': 0,
-                          'list_type_goto': 0}
+                          'list_type_goto': 0,
+                          'list_type_marks': 0}
 
         ids = []
 
@@ -114,6 +115,34 @@ class UserListGL():
                 items = self.log('mode_warn')
             elif text == 'log timestamp':
                 items = self.log('mode_timestamp')
+            elif text == 'marks >':
+                items = ['find', 'incremental', 'smart',
+                         'token 1', 'token 2', 'token 3', 'token 4', 'token 5']
+
+                self.user_list_show(self.list_type['list_type_marks'], items)
+                return
+            else:
+                return
+
+        elif args['listType'] == self.list_type['list_type_marks']:
+            text = args['text']
+
+            if text == 'find':
+                items = self.marks('mode_find')
+            elif text == 'incremental':
+                items = self.marks('mode_incremental')
+            elif text == 'smart':
+                items = self.marks('mode_smart')
+            elif text == 'token 1':
+                items = self.marks('mode_token_1')
+            elif text == 'token 2':
+                items = self.marks('mode_token_2')
+            elif text == 'token 3':
+                items = self.marks('mode_token_3')
+            elif text == 'token 4':
+                items = self.marks('mode_token_4')
+            elif text == 'token 5':
+                items = self.marks('mode_token_5')
             else:
                 return
 
@@ -312,6 +341,9 @@ class UserListGL():
 
             if text == '.LOG':
                 items.add('log timestamp')
+
+        # Marks
+        items.add('marks >')
 
         items = sorted(items)
 
@@ -1013,6 +1045,70 @@ class UserListGL():
             pattern = r'(?i)\b(?:errors?|fatal|warn(?:ings?)?)\b'
 
         items = self.search(pattern, None)
+        return items
+
+    def marks(self, mode=None):
+        '''Get marked lines based on mode.'''
+
+        # Get mark style.
+        style = {'mode_find': 31,
+                 'mode_incremental': 28,
+                 'mode_smart': 29,
+                 'mode_token_1': 25,
+                 'mode_token_2': 24,
+                 'mode_token_3': 23,
+                 'mode_token_4': 22,
+                 'mode_token_5': 21}.get(mode)
+
+        if style is None:
+            return
+
+        # Found start positions.
+        positions = []
+
+        # Get first end pos.
+        end = editor.indicatorEnd(style, 0)
+
+        if end == 0:
+            return []
+
+        # Get first start pos.
+        start = editor.indicatorStart(style, end - 1)
+
+        if editor.indicatorValueAt(style, start):
+            positions.append(start)
+        elif editor.indicatorValueAt(style, end):
+            positions.append(end)
+
+        # Get more start pos.
+        start = end
+
+        while end < editor.getLength():
+            end = editor.indicatorEnd(style, start)
+            start = end
+
+            if editor.indicatorValueAt(style, start):
+                positions.append(start)
+
+        # Get items from each start pos.
+        items = []
+
+        if positions:
+            tab_size = editor.getTabWidth() or 4
+            prev_line = -1
+
+            for pos in positions:
+                line = editor.lineFromPosition(pos)
+
+                if line != prev_line:
+                    text = editor.getLine(line).rstrip()
+                    text = text.replace('\t', ' ' * tab_size)
+
+                    item = self.list_pattern.format(line + 1, text[:self.max_length])
+                    items.append(item)
+
+                prev_line = line
+
         return items
 
     def search(self, pattern, style, require_styled=False):
