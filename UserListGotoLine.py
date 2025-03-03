@@ -17,6 +17,7 @@ class UserListGL():
         # Create user list ids.
         self.list_type = {'list_type_main': 0,
                           'list_type_goto': 0,
+                          'list_type_change_history': 0,
                           'list_type_marks': 0}
 
         ids = []
@@ -65,16 +66,12 @@ class UserListGL():
                 items = self.any_word()
             elif text == 'bookmarks':
                 items = self.bookmarks()
-            elif text == 'change history':
-                items = self.change_history()
-            elif text == 'change history modified':
-                items = self.change_history('mode_modified')
-            elif text == 'change history reverted to modified':
-                items = self.change_history('mode_reverted_to_modified')
-            elif text == 'change history reverted to origin':
-                items = self.change_history('mode_reverted_to_origin')
-            elif text == 'change history saved':
-                items = self.change_history('mode_saved')
+            elif text == 'change history >':
+                items = ['all changes', 'modified', 'reverted to modified',
+                         'reverted to origin', 'saved']
+
+                self.user_list_show(self.list_type['list_type_change_history'], items)
+                return
             elif text == 'codes':
                 items = self.codes()
             elif text == 'codes extended':
@@ -121,6 +118,22 @@ class UserListGL():
 
                 self.user_list_show(self.list_type['list_type_marks'], items)
                 return
+            else:
+                return
+
+        elif args['listType'] == self.list_type['list_type_change_history']:
+            text = args['text']
+
+            if text == 'all changes':
+                items = self.change_history()
+            elif text == 'modified':
+                items = self.change_history('mode_modified')
+            elif text == 'reverted to modified':
+                items = self.change_history('mode_reverted_to_modified')
+            elif text == 'reverted to origin':
+                items = self.change_history('mode_reverted_to_origin')
+            elif text == 'saved':
+                items = self.change_history('mode_saved')
             else:
                 return
 
@@ -182,11 +195,7 @@ class UserListGL():
         # Change history.
         if editor.getChangeHistory():
             if editor.canUndo():
-                items.add('change history')
-                items.add('change history modified')
-                items.add('change history reverted to modified')
-                items.add('change history reverted to origin')
-                items.add('change history saved')
+                items.add('change history >')
 
         # Codes.
         if lang_type not in (LANGTYPE.TXT,
