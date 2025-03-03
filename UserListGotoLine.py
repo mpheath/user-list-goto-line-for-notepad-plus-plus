@@ -49,64 +49,73 @@ class UserListGL():
             editor.ensureVisible(line - 1)
             editor.setFirstVisibleLine(line - 1)
             editor.gotoLine(line - 1)
+            return
 
         elif args['listType'] == self.list_id[1]:
             text = args['text']
 
             if text.startswith('any word style'):
-                self.any_word()
+                items = self.any_word()
             elif text == 'bookmarks':
-                self.bookmarks()
+                items = self.bookmarks()
             elif text == 'change history':
-                self.change_history()
+                items = self.change_history()
             elif text == 'change history modified':
-                self.change_history('mode_modified')
+                items = self.change_history('mode_modified')
             elif text == 'change history reverted to modified':
-                self.change_history('mode_reverted_to_modified')
+                items = self.change_history('mode_reverted_to_modified')
             elif text == 'change history reverted to origin':
-                self.change_history('mode_reverted_to_origin')
+                items = self.change_history('mode_reverted_to_origin')
             elif text == 'change history saved':
-                self.change_history('mode_saved')
+                items = self.change_history('mode_saved')
             elif text == 'codes':
-                self.codes()
+                items = self.codes()
             elif text == 'codes extended':
-                self.codes('mode_extended')
+                items = self.codes('mode_extended')
             elif text == 'codes uppercase':
-                self.codes('mode_uppercase')
+                items = self.codes('mode_uppercase')
             elif text == 'comments':
-                self.comments()
+                items = self.comments()
             elif text == 'comments block':
-                self.comments('mode_block')
+                items = self.comments('mode_block')
             elif text == 'comments doc':
-                self.comments('mode_doc')
+                items = self.comments('mode_doc')
             elif text == 'comments docline':
-                self.comments('mode_docline')
+                items = self.comments('mode_docline')
             elif text == 'comments nested':
-                self.comments('mode_nested')
+                items = self.comments('mode_nested')
             elif text == 'comments reminder':
-                self.comments('mode_reminder')
+                items = self.comments('mode_reminder')
             elif text.startswith('current char style'):
-                self.current_char('mode_style')
+                items = self.current_char('mode_style')
             elif text == 'current selection':
-                self.current_selection()
+                items = self.current_selection()
             elif text.startswith('current selection style'):
-                self.current_selection('mode_style')
+                items = self.current_selection('mode_style')
             elif text == 'current word':
-                self.current_word()
+                items = self.current_word()
             elif text.startswith('current word style'):
-                self.current_word('mode_style')
+                items = self.current_word('mode_style')
             elif text == 'folds':
-                self.folds()
+                items = self.folds()
             elif text == 'log':
-                self.log()
+                items = self.log()
             elif text == 'log error':
-                self.log('mode_error')
+                items = self.log('mode_error')
             elif text == 'log fatal':
-                self.log('mode_fatal')
+                items = self.log('mode_fatal')
             elif text == 'log warn':
-                self.log('mode_warn')
+                items = self.log('mode_warn')
             elif text == 'log timestamp':
-                self.log('mode_timestamp')
+                items = self.log('mode_timestamp')
+            else:
+                return
+
+        if items:
+            self.user_list_show(self.list_id[0], items)
+        elif items is not None:
+            notepad.messageBox('No items in the list to show.', self.title,
+                               MESSAGEBOXFLAGS.ICONEXCLAMATION)
 
     def register(self):
         '''Add the callback for the user list.'''
@@ -303,14 +312,15 @@ class UserListGL():
         self.user_list_show(self.list_id[1], items)
 
     def any_word(self):
-        '''Show any word lines with style at caret.'''
+        '''Get any word lines with style at caret.'''
 
         pattern = r'\w+'
         style = editor.getStyleAt(editor.getCurrentPos())
-        self.search(pattern, [style], True)
+        items = self.search(pattern, [style], True)
+        return items
 
     def bookmarks(self):
-        '''Show bookmarked lines.'''
+        '''Get bookmarked lines.'''
 
         bookmark = notepad.getBookMarkID()
         mask = 1 << bookmark
@@ -325,10 +335,10 @@ class UserListGL():
                 item = self.list_pattern.format(line + 1, text[:self.max_length])
                 items.append(item)
 
-        self.user_list_show(self.list_id[0], items)
+        return items
 
     def change_history(self, mode=None):
-        '''Show change history lines with multiple modes.'''
+        '''Get change history lines with multiple modes.'''
 
         SC_MARKNUM_HISTORY_REVERTED_TO_ORIGIN = 21
         SC_MARKNUM_HISTORY_SAVED = 22
@@ -360,10 +370,10 @@ class UserListGL():
                 item = self.list_pattern.format(line + 1, text[:self.max_length])
                 items.append(item)
 
-        self.user_list_show(self.list_id[0], items)
+        return items
 
     def codes(self, mode=None):
-        '''Show code lines with style and with multiple modes.'''
+        '''Get code lines with style and with multiple modes.'''
 
         def lang_not_setup():
             notepad.messageBox('Language not setup.\n\n'
@@ -615,10 +625,11 @@ class UserListGL():
             lang_not_setup()
             return
 
-        self.search(pattern, style, pattern.endswith('.'))
+        items = self.search(pattern, style, pattern.endswith('.'))
+        return items
 
     def comments(self, mode=None):
-        '''Show comment lines with style and with multiple modes.'''
+        '''Get comment lines with style and with multiple modes.'''
 
         def lang_not_setup():
             notepad.messageBox('Language not setup.\n\n'
@@ -835,10 +846,11 @@ class UserListGL():
             lang_not_setup()
             return
 
-        self.search(pattern, style, pattern.endswith('.'))
+        items = self.search(pattern, style, pattern.endswith('.'))
+        return items
 
     def current_selection(self, mode=None):
-        '''Show current selection lines with option of style mode if a word.'''
+        '''Get current selection lines with option of style mode if a word.'''
 
         start = editor.getSelectionStart()
         end = editor.getSelectionEnd()
@@ -848,13 +860,15 @@ class UserListGL():
 
             if mode == 'mode_style':
                 style_at = editor.getStyleAt(start)
-                self.search(pattern, [style_at], True)
+                items = self.search(pattern, [style_at], True)
             else:
                 pattern = r'\Q' + pattern + r'\E'
-                self.search(pattern, None)
+                items = self.search(pattern, None)
+
+            return items
 
     def current_char(self, mode=None):
-        '''Show current char lines with option of style mode.'''
+        '''Get current char lines with option of style mode.'''
 
         ch = editor.getCharAt(editor.getCurrentPos())
 
@@ -871,12 +885,14 @@ class UserListGL():
 
             if mode == 'mode_style':
                 style = editor.getStyleAt(editor.getCurrentPos())
-                self.search(pattern, [style], True)
+                items = self.search(pattern, [style], True)
             else:
-                self.search(pattern, None)
+                items = self.search(pattern, None)
+
+            return items
 
     def current_word(self, mode=None):
-        '''Show current word lines with option of style mode.'''
+        '''Get current word lines with option of style mode.'''
 
         pattern = editor.getWord(editor.getCurrentPos(), True)
 
@@ -885,12 +901,14 @@ class UserListGL():
 
             if mode == 'mode_style':
                 style = editor.getStyleAt(editor.getCurrentPos())
-                self.search(pattern, [style], True)
+                items = self.search(pattern, [style], True)
             else:
-                self.search(pattern, None)
+                items = self.search(pattern, None)
+
+            return items
 
     def folds(self):
-        '''Show fold lines.'''
+        '''Get fold lines.'''
 
         if editor.getEndStyled() != editor.getTextLength():
             msg = ('Doc detected as not fully styled.\n\n'
@@ -918,10 +936,10 @@ class UserListGL():
 
             prev_level = level
 
-        self.user_list_show(self.list_id[0], items)
+        return items
 
     def log(self, mode=None):
-        '''Show log lines based on mode.'''
+        '''Get log lines based on mode.'''
 
         if mode == 'mode_error':
             pattern = r'(?i)\berrors?\b'
@@ -988,7 +1006,8 @@ class UserListGL():
         else:
             pattern = r'(?i)\b(?:errors?|fatal|warn(?:ings?)?)\b'
 
-        self.search(pattern, None)
+        items = self.search(pattern, None)
+        return items
 
     def search(self, pattern, style, require_styled=False):
         '''Search with a pattern in the current buffer.'''
@@ -1062,15 +1081,10 @@ class UserListGL():
 
             start = editor.searchInTarget(pattern)
 
-        self.user_list_show(self.list_id[0], items)
+        return items
 
     def user_list_show(self, list_id, items):
         '''Show the matched lines in another user list.'''
-
-        if not items:
-            notepad.messageBox('No items in the list to show.', self.title,
-                               MESSAGEBOXFLAGS.ICONEXCLAMATION)
-            return
 
         # Save current separators.
         saved = {'item_sep': editor.autoCGetSeparator(),
