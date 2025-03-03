@@ -15,13 +15,19 @@ class UserListGL():
         '''Initialize an instance.'''
 
         # Create user list ids.
-        self.list_id = []
+        self.list_type = {'list_type_main': 0,
+                          'list_type_goto': 0}
 
-        while len(self.list_id) < 2:
-            list_id = random.randint(1000, 9999)
+        ids = []
 
-            if list_id not in self.list_id:
-                self.list_id.append(list_id)
+        for k in self.list_type:
+            while 1:
+                i = random.randint(1000, 9999)
+
+                if i not in ids:
+                    ids.append(i)
+                    self.list_type[k] = i
+                    break
 
         # Set list format pattern used for line number and line text.
         self.list_pattern = '{:<4}  {}'
@@ -38,7 +44,7 @@ class UserListGL():
     def callback(self, args):
         '''Receive message from the user list.'''
 
-        if args['listType'] == self.list_id[0]:
+        if args['listType'] == self.list_type['list_type_goto']:
             m = re.match(r'\d+', args['text'])
 
             if not m:
@@ -51,7 +57,7 @@ class UserListGL():
             editor.gotoLine(line - 1)
             return
 
-        elif args['listType'] == self.list_id[1]:
+        elif args['listType'] == self.list_type['list_type_main']:
             text = args['text']
 
             if text.startswith('any word style'):
@@ -112,7 +118,7 @@ class UserListGL():
                 return
 
         if items:
-            self.user_list_show(self.list_id[0], items)
+            self.user_list_show(self.list_type['list_type_goto'], items)
         elif items is not None:
             notepad.messageBox('No items in the list to show.', self.title,
                                MESSAGEBOXFLAGS.ICONEXCLAMATION)
@@ -309,7 +315,7 @@ class UserListGL():
 
         items = sorted(items)
 
-        self.user_list_show(self.list_id[1], items)
+        self.user_list_show(self.list_type['list_type_main'], items)
 
     def any_word(self):
         '''Get any word lines with style at caret.'''
