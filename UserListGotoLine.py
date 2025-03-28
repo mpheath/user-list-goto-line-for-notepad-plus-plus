@@ -283,6 +283,7 @@ class UserListGL():
                              LANGTYPE.GOLANG,
                              LANGTYPE.JAVA,
                              LANGTYPE.JAVASCRIPT,
+                             LANGTYPE.LUA,
                              LANGTYPE.RAKU,
                              LANGTYPE.RUST,
                              LANGTYPE.SWIFT,
@@ -792,6 +793,8 @@ class UserListGL():
         elif lang_type == LANGTYPE.LUA:
             if mode == 'mode_block':
                 style = [1]
+            elif mode == 'mode_doc':
+                style = [3]
             else:
                 style = [2]
         elif lang_type == LANGTYPE.MAKEFILE:
