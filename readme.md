@@ -2,7 +2,7 @@
 
 Searches the current buffer for lines of interest in Notepad++ and shows a user list that will goto to the line of the selected item.
 
-The initial list can have these items:
+The main list can have these items:
 
 ```
 any word style 0
@@ -33,13 +33,13 @@ marks >
 
 Some items may not be shown if no selection exists, Change History is turned off, ...
 
-Items ending with `>` open a 2nd list.
+Items ending with `>` opens a 2nd list.
 
  * any word style 0
    * List lines that match any word in the detected style number and goto selected line.
  * bookmarks
    * List bookmark lines and goto selected line.
- * change history
+ * change history >
    * List all change history lines and goto selected line.
      * Opens a 2nd list:
        * all changes
@@ -69,7 +69,7 @@ Items ending with `>` open a 2nd list.
      * Setup for Au3, C, C++, C#, EScript, FreeBasic, GDScript, Go, Java, JavaScript, Lua, MSSQL, PHP, Powershell, Python, Raku, Ruby, Rust, SQL and Swift.
  * comments doc
    * List comment document lines and goto selected line.
-     * Setup for C, C++, C#, COBOL, FreeBasic, Go, Java, JavaScript, Raku, Rust, SQL and Swift.
+     * Setup for C, C++, C#, COBOL, FreeBasic, Go, Java, JavaScript, Lua, Raku, Rust, SQL and Swift.
  * comments docline
    * List comment single line document lines and goto selected line.
      * Setup for D.
@@ -112,17 +112,17 @@ Items ending with `>` open a 2nd list.
    * List lines containing a mark indicator and goto selected line.
      * Opens a 2nd list:
        * find
-         * List marks done with Mark dialog.
+         * List marks set by the Mark dialog.
        * incremental
          * List marks with incremental search and select highlight all.
        * smart
-         * List marks done by double click a word to smart highlight matching words.
+         * List marks set by double clicking a word to smart highlight matching words.
        * token 1
        * token 2
        * token 3
        * token 4
        * token 5
-         * List marks by Search -> Style ...
+         * List marks set by Search -> Style ...
 
 
 An example showing the codes list:
