@@ -210,7 +210,7 @@ class UserListGL():
             items.add('codes')
 
             if 'codes' in items:
-                if lang_lexer in ('mssql',):
+                if lang_type in (LANGTYPE.MSSQL,):
                     items.remove('codes')
 
             if lang_type in (LANGTYPE.BATCH,
@@ -263,6 +263,7 @@ class UserListGL():
                              LANGTYPE.JAVA,
                              LANGTYPE.JAVASCRIPT,
                              LANGTYPE.LUA,
+                             LANGTYPE.MSSQL,
                              LANGTYPE.PHP,
                              LANGTYPE.POWERSHELL,
                              LANGTYPE.PYTHON,
@@ -271,9 +272,6 @@ class UserListGL():
                              LANGTYPE.RUST,
                              LANGTYPE.SWIFT,
                              LANGTYPE.SQL):
-                items.add('comments block')
-
-            elif lang_lexer in ('mssql',):
                 items.add('comments block')
 
             if lang_type in (LANGTYPE.C,
@@ -869,7 +867,7 @@ class UserListGL():
             style = [1]
         elif lang_type == LANGTYPE.XML:
             style = [9]
-        elif lang_lexer == 'mssql':
+        elif lang_type == LANGTYPE.MSSQL:
             if mode == 'mode_block':
                 style = [1]
             else:
